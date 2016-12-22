@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Auth;
 
 class ChatController extends Controller
 {
@@ -18,28 +19,30 @@ class ChatController extends Controller
     public function __construct()
     {
         $this->pusher = App::make('pusher');
-        $this->user = Session::get('user');
+        $this->user = Auth::user();
         $this->chatChannel = self::DEFAULT_CHAT_CHANNEL;
     }
 
     public function getIndex()
     {
+
         if(!$this->user)
         {
-            return redirect('auth/github?redirect=/chat');
+            return redirect('home');
         }
 
         $chatChannel = $this->chatChannel;
 
-        return view('chat', compact('chatChannel'));
+        return view('chat.chat', compact('chatChannel'));
     }
 
     public function postMessage(Request $request)
     {
+
         $message = [
             'text' => e($request->input('chat_text')),
-            'username' => $this->user->getNickname(),
-            'avatar' => $this->user->getAvatar(),
+            'username' => $this->user['name'],
+            'avatar' => $this->user['avatar'],
             'timestamp' => (time()*1000)
         ];
         $this->pusher->trigger($this->chatChannel, 'new-message', $message);

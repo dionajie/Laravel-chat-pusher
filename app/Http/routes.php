@@ -2,13 +2,17 @@
 use Illuminate\Support\Facades\App;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('auth/github', 'Auth\AuthController@redirectToProvider');
-Route::get('auth/github/callback', 'Auth\AuthController@handleProviderCallback');
+Route::get('/', 'HomeController@index');
 
+
+// Auth
+Route::Auth();
+Route::get('/redirect/{provider}', 'SocialAuthController@redirect');
+Route::get('/callback/{provider}', 'SocialAuthController@callback');
+
+
+// test pusher
 Route::get('/bridge', function() {
   	$pusher = App::make('pusher');
     $pusher->trigger( 'test-channel',
@@ -21,3 +25,6 @@ Route::get('/bridge', function() {
 
 Route::controller('notifications', 'NotificationController');
 Route::controller('chat', 'ChatController');
+
+
+

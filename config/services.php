@@ -41,4 +41,10 @@ return [
         'redirect' => env('GITHUB_CALLBACK_URL'),
     ],
 
+    'twitter' => [
+        'client_id' => 'CUcPE8OzCL6StepJjJotGUmrx',
+        'client_secret' => 'ezRaApWmA8d74WlXoIoo04fP3va2fE5qFbx1BwNh20gSOAGyu2',
+        'redirect' => 'http://chat.dev/callback/twitter',
+    ],
+
 ];
