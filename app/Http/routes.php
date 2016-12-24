@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\App;
 
 
 Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
 
 
 // Auth

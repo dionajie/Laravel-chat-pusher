@@ -58,11 +58,14 @@
                             </div>
                         </div>
 
-                        <p>
-
-                            <a href="redirect/twitter">Twitter Login</a>
-                        </p>
+                        
                     </form>
+                    <p class="text-center"> OR </p>
+                    <div class="col-md-12">
+                        <div class="col-md-6 col-md-offset-3 text-center">
+                            <a href="redirect/twitter" class="btn btn-success btn-lg"> <i class="fa fa-twitter" aria-hidden="true"></i> Twitter Login</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

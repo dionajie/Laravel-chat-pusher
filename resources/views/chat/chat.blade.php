@@ -2,19 +2,10 @@
 
 @section('content')
 
-<div class="stripe no-padding-bottom numbered-stripe">
-    <div class="fixed wrapper">
-        <ol class="strong" start="2">
-            <li>
-                <div class="hexagon"></div>
-                <h2><b>Real-Time Chat</b> <small>Fundamental real-time communication.</small></h2>
-            </li>
-        </ol>
-    </div>
-</div>
-<section class="blue-gradient-background">
+
+
     <div class="container">
-        <div class="row light-grey-blue-background chat-app">
+        <div class="row chat-app">
 
             <div id="messages">
                 <div class="time-divide">
@@ -24,8 +15,8 @@
 
             <div class="action-bar">
                 <textarea class="input-message col-xs-10" placeholder="Your message"></textarea>
-                <div class="option col-xs-1 white-background">
-                    <span class="fa fa-smile-o light-grey"></span>
+                <div class="option col-xs-1 light-grey-background">
+                    <span class="fa fa-smile-o"></span>
                 </div>
                 <div class="option col-xs-1 green-background send-message">
                     <span class="white light fa fa-paper-plane-o"></span>
@@ -34,7 +25,7 @@
 
         </div>
     </div>
-</section>
+
 
 <script id="chat_message_template" type="text/template">
     <div class="message">

@@ -33,7 +33,7 @@ class ChatController extends Controller
 
         $chatChannel = $this->chatChannel;
 
-        return view('chat.chat', compact('chatChannel'));
+        return view('chat.chat3', compact('chatChannel'));
     }
 
     public function postMessage(Request $request)
