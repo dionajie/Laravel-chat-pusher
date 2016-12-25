@@ -1,34 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Real-Time Laravel with Pusher</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Twitter Chat</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
 
-    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,200italic,300italic" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
-    {{-- <link rel="stylesheet" type="text/css" href="http://d3dhju7igb20wy.cloudfront.net/assets/0-4-0/all-the-things.css" /> --}}
-    <link rel="stylesheet" href="{{ URL::asset('css/chat.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <style>
-        .chat-app {
-            margin: 50px;
-            padding-top: 10px;
-        }
-
-        .chat-app .message:first-child {
-            margin-top: 15px;
-        }
-
-        #messages {
-            height: 300px;
-            overflow: auto;
-            padding-top: 5px;
-        }
-    </style>
-
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdn.rawgit.com/samsonjs/strftime/master/strftime-min.js"></script>
-    <script src="//js.pusher.com/3.0/pusher.min.js"></script>
+  <link rel="stylesheet" href="{{ URL::asset('admin/css/AdminLTE.min.css') }}">
+  <link rel="stylesheet" href="{{ URL::asset('admin/css/skins/skin-blue.min.css') }}">
+  
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://cdn.rawgit.com/samsonjs/strftime/master/strftime-min.js"></script>
+  <script src="//js.pusher.com/3.0/pusher.min.js"></script>
 
     <script>
         // Ensure CSRF token is sent with AJAX requests
@@ -43,58 +34,107 @@
             console.log(msg);
         };
     </script>
+
+  <style type="text/css">
+      .small-box .icon {
+        top: 0px !important;
+      }
+
+      .sidebar-menu .treeview-menu>li>a {
+        font-size: 15px;
+        padding: 10px 15px 10px 40px;
+      }
+
+      .navbar-nav>.user-menu>.dropdown-menu>li.user-header {
+        height: 70px !important;
+      }
+
+      
+  </style>
+
 </head>
-<body>
 
-<nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
+<body class="hold-transition skin-blue sidebar-mini">
+ 
+<div class="wrapper">
 
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+  <header class="main-header">
+    <a href="{{ url('/') }}" class="logo">
+      <span class="logo-mini"><b>TC</b></span>
+      <span class="logo-lg"><b>Twitter Chat</b></span>
+    </a>
 
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
-                </a>
-            </div>
+    <nav class="navbar navbar-static-top">
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
 
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-                    <li><a href="{{ url('/chat') }}">Chat</a></li>
-                </ul>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+    
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="{{ Auth::user()->avatar }}" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{ Auth::user()->name }}</span>
+            </a>
+            <ul class="dropdown-menu">
 
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
-            </div>
-        </div>
+              <li class="user-header">
+                <p>
+                  {{ Auth::user()->name }}
+                  <small></small>
+                </p>
+              </li>
+              <li class="user-footer">
+                  <div class="pull-left">
+                    <a href="{{ url('/dashboard') }}" class="btn btn-default btn-flat"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+                  </div>
+                  <div class="pull-right">
+                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"> <i class="fa fa-sign-out" aria-hidden="true"></i> Log out</a>
+                  </div>
+              </li>
+            </ul>
+          </li>
+         
+        </ul>
+      </div>
     </nav>
+  </header>
 
-@yield('content');
+  <aside class="main-sidebar">
+    <section class="sidebar" style="font-size: 17px;">
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="{{ Auth::user()->avatar }}" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>{{ Auth::user()->name }}</p>
+          <a href="#"><i class="fa fa-circle text-success"></i>Online</a>
+        </div>
+      </div>
+ 
+      <ul class="sidebar-menu">
+        <li class="header">Menu</li>
+        <li>
+          <a href="{{ url('/chat') }}"><i class="fa fa-comments"></i> <span>General</span></a>
+        </li>
+    </ul>
+    </section>
+ 
+  </aside>
+
+  @yield('content')
+
+</div>
+
+
 
 </body>
 </html>
+
+
+<!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{{ URL::asset('admin/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('admin/plugins/fastclick/fastclick.js') }}"></script>
+<script type="text/javascript" src="{{ URL::asset('admin/js/app.min.js') }}"></script>
