@@ -192,8 +192,14 @@
         }
     });
 
-    var channel = pusher.subscribe('{{$chatChannel}}');
-    channel.bind('new-message', addMessage);
+    var presenceChannel = pusher.subscribe('{{$chatChannel}}');
+    presenceChannel.bind('new-message', addMessage);
+
+    presenceChannel.members.each(function(member) {
+      var userId = member.id;
+      var userInfo = member.info;
+      console.log(userId+' '+userInfo)
+    });
 
 </script>
 
