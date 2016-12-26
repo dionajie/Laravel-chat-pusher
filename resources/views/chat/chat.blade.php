@@ -61,6 +61,11 @@
                     </div>
                 </script>
             </div>
+
+            <div class="col-md-6 col-xs-12 col-sm-9">
+                <a class="twitter-timeline"  href="https://twitter.com/hashtag/12thntsunami" data-widget-id="813230577478299648">#12thntsunami Tweets</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </div>
         </div>
     </section>
 </div>
@@ -175,9 +180,17 @@
 
     /******************* PUSHER *********************/
 
-    var pusher = new Pusher("{{env("PUSHER_KEY")}}", { 
-        cluster: 'ap1' 
-    })
+   
+
+    var pusher = new Pusher('{{env("PUSHER_KEY")}}', {
+        cluster: 'ap1',
+        authEndpoint: '/chat/auth',
+        auth: {
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }
+    });
 
     var channel = pusher.subscribe('{{$chatChannel}}');
     channel.bind('new-message', addMessage);

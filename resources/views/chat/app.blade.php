@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
 
-  <link rel="stylesheet" href="{{ URL::asset('admin/css/AdminLTE.min.css') }}">
+  <link rel="stylesheet" href="{{ URL::asset('admin/css/AdminLTE.css') }}">
   <link rel="stylesheet" href="{{ URL::asset('admin/css/skins/skin-blue.min.css') }}">
   
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>

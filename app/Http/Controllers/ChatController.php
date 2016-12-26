@@ -23,7 +23,7 @@ class ChatController extends Controller
     {
         $this->pusher = App::make('pusher');
         $this->user = Auth::user();
-        $this->chatChannel = self::DEFAULT_CHAT_CHANNEL;
+        $this->chatChannel = 'private-chat';
     }
 
     public function getIndex()
@@ -37,6 +37,21 @@ class ChatController extends Controller
         $chatChannel = $this->chatChannel;
 
         return view('chat.chat', compact('chatChannel'));
+    }
+
+    public function postAuth(Request $request)
+    {
+        if($this->user['username'] == 'dionajie') {
+            $channelName =  $this->chatChannel;
+            $socketId = $request->input('socket_id');
+
+            $auth = $this->pusher->socket_auth($channelName, $socketId);
+
+            return response($auth);
+        } else {
+            return redirect('home');
+        }
+
     }
 
     public function postMessage(Request $request)
