@@ -115,7 +115,7 @@
  
       <ul class="sidebar-menu">
         <li class="header">Menu</li>
-        <li>
+        <li class="{{ (Request::segment(1)=='chat' && Request::segment(2)=='' ? 'active' : '') }}">
           <a href="{{ url('/chat') }}"><i class="fa fa-comments"></i> <span>General</span></a>
         </li>
     </ul>

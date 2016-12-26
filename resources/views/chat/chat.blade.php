@@ -1,27 +1,53 @@
 @extends('chat.app')
 
 @section('content')
+<style type="text/css">
 
+    .online_item {
+        border-bottom: 1px solid #d6d6d6 !important;
+        padding : 0px 10px 5px 10px !important;
+        margin-bottom: 10px;
+    }
+    .online_item>img {
+        width: 40px;
+        height: 40px;
+        border: 2px solid transparent;
+        border-radius: 50%;
+    }
+
+    .online_item>.online {
+        border: 2px solid #00a65a;
+    }
+
+</style>
 <div class="content-wrapper">
 
     <section class="content-header">
-        <h1>  Chatting </h1>
+        <h1>  General Group </h1>
     </section>
 
     <section class="content">
         <div class="row">
+
+            <!-- ============ Chat Interface ================-->
             <div class="col-md-6 col-xs-12 col-sm-9">
                 <div class="box box-primary direct-chat direct-chat-primary">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Direct Chat</h3>
+                        <i class="fa fa-comments-o"> </i>
+                        <h3 class="box-title">Chat</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i> </button>
                         </div>
                     </div>
 
                     <div class="box-body">
+                        {{-- <div class="online_item container">
+                            @foreach($users as $user)
+                                <img class="ava"  id="user-{{$user->username}}" src="{{ $user->avatar }}" alt="{{ $user->name }}" >
+                            @endforeach
+                        </div> --}}
                         <div class="direct-chat-messages">
-                        <!-- Message Here -->
+                            <!-- Message Here -->
                         </div>
                     </div>
                     
@@ -35,6 +61,7 @@
                     </div>
                 </div>
 
+                <!-- Other Users chat -->
                 <script id="chat_message_template" type="text/template"  >
                     <div class="direct-chat-msg text-display col-md-9">
                         <div class="direct-chat-info clearfix">
@@ -48,6 +75,7 @@
                     </div>
                 </script>
 
+                <!-- My chat -->
                 <script id="chat_message_template_right" type="text/template"  >
                     <div class="direct-chat-msg right text-display col-md-9 col-md-offset-3">
                         <div class="direct-chat-info clearfix">
@@ -62,10 +90,38 @@
                 </script>
             </div>
 
+
+            <!-- ============ Group member and online user ================-->
             <div class="col-md-6 col-xs-12 col-sm-9">
-                <a class="twitter-timeline"  href="https://twitter.com/hashtag/12thntsunami" data-widget-id="813230577478299648">#12thntsunami Tweets</a>
-                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                <div class="box box-primary direct-chat direct-chat-primary">
+                    <div class="box-header with-border">
+                        <i class="fa fa-comments-o"> </i>
+                        <h3 class="box-title">Member</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i> </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="online_item container">
+                            @foreach($users as $user)
+                                <img class="ava"  id="user-{{$user->username}}" src="{{ $user->avatar }}" alt="{{ $user->name }}" >
+                            @endforeach
+                        </div>
+                              
+                    </div>
+                    
+                    <div class="box-footer">
+                       
+                    </div>
+                </div>
             </div>
+
+            <script id="user_online" type="text/template"  >
+                <div class="text-display col-md-9 col-md-offset-3">
+                   
+                </div>
+            </script>
         </div>
     </section>
 </div>
@@ -76,8 +132,8 @@
 
     var lastId;
 
-    // first load message
-    $(document).ready(function(){
+    // get chat history 
+    function getHistory() {
         lastId = 0;
         $.get('/chat/message', {after_id: lastId} ).success(function(response) {
             var length = response.length;
@@ -91,7 +147,8 @@
   
         });
         
-    });
+    };
+
 
     // init
     function init() {
@@ -162,8 +219,6 @@
         messages.scrollTop(messages[0].scrollHeight);
     }
 
- 
-    // Creates an activity element from the template
     function createMessageEl() {
         var text = $('#chat_message_template').text();
         var el = $(text);
@@ -176,11 +231,19 @@
         return el;
     }
 
+    function addUserOnline(data) {
+        $('#user-'+data.name+'').addClass('online')
+    }
+
+    function removeUserOnline(data) {
+        $('#user-'+data.name+'').removeClass('online')
+    }
+
+
     $(init);
 
-    /******************* PUSHER *********************/
 
-   
+    /******************* PUSHER *********************/
 
     var pusher = new Pusher('{{env("PUSHER_KEY")}}', {
         cluster: 'ap1',
@@ -193,13 +256,24 @@
     });
 
     var presenceChannel = pusher.subscribe('{{$chatChannel}}');
+
     presenceChannel.bind('new-message', addMessage);
 
-    presenceChannel.members.each(function(member) {
-      var userId = member.id;
-      var userInfo = member.info;
-      console.log(userId+' '+userInfo)
+    presenceChannel.bind('pusher:subscription_succeeded', function(members) {
+        getHistory()
+        members.each(function(member) {
+            addUserOnline(member.info);
+        });
     });
+
+    presenceChannel.bind('pusher:member_added', function(member) {
+        addUserOnline(member.info);
+    });
+
+    presenceChannel.bind('pusher:member_removed', function(member) {
+        removeUserOnline(member.info);
+    });
+
 
 </script>
 
