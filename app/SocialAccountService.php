@@ -3,7 +3,6 @@
 namespace App;
 
 use Laravel\Socialite\Contracts\Provider;
-use Session;
 
 class SocialAccountService
 {
@@ -19,7 +18,6 @@ class SocialAccountService
             ->whereProviderUserId($providerUser->getId())
             ->first();
 
-        // dd($account);
         if ($account) {
             return $account->user;
         } else {
@@ -35,10 +33,11 @@ class SocialAccountService
                 $user = User::create([
                     'email' => $providerUser->getEmail(),
                     'name' => $providerUser->getName(),
+                    'username' => $providerUser->getNickname(),
                     'avatar' => str_replace('http://','https://',$providerUser->getAvatar()),
                 ]);
             }
-
+      
             $account->user()->associate($user);
             $account->save();
 

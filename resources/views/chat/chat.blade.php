@@ -6,12 +6,11 @@
 
     <section class="content-header">
         <h1>  Chatting </h1>
-
     </section>
 
     <section class="content">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-md-6 col-xs-12 col-sm-9">
                 <div class="box box-primary direct-chat direct-chat-primary">
                     <div class="box-header with-border">
                       <h3 class="box-title">Direct Chat</h3>
@@ -37,10 +36,23 @@
                 </div>
 
                 <script id="chat_message_template" type="text/template"  >
-                    <div class="direct-chat-msg text-display col-md-12">
+                    <div class="direct-chat-msg text-display col-md-9">
                         <div class="direct-chat-info clearfix">
                             <span class="direct-chat-name pull-left"> </span>
                             <span class="direct-chat-timestamp pull-right"> </span>
+                        </div>
+
+                        <img class="direct-chat-img" src="" alt="Message User Image">
+
+                        <div class="direct-chat-text"> </div>
+                    </div>
+                </script>
+
+                <script id="chat_message_template_right" type="text/template"  >
+                    <div class="direct-chat-msg right text-display col-md-9 col-md-offset-3">
+                        <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-right"> </span>
+                            <span class="direct-chat-timestamp pull-left"> </span>
                         </div>
 
                         <img class="direct-chat-img" src="" alt="Message User Image">
@@ -127,10 +139,16 @@
 
      // Build the UI for a new message and add to the DOM
     function addMessageToUI(data) {
-        console.log(data)
-        var el = createMessageEl();
+        var user = {!! json_encode(auth()->user()->username) !!};
+        var username = ''+data.name+' (@'+data.username+')'
+        
+        if(user === data.username) {
+            var el = createMessageRightEl();
+        } else {
+            var el = createMessageEl();
+        }
         el.find('.direct-chat-text').html(data.text);
-        el.find('.direct-chat-name').html(data.username);
+        el.find('.direct-chat-name').html(username);
         el.find('.direct-chat-img').attr('src', data.avatar);
         el.find('.direct-chat-timestamp').text(strftime('%H:%M:%S %P', new Date(data.timestamp)));
         
@@ -143,6 +161,12 @@
     // Creates an activity element from the template
     function createMessageEl() {
         var text = $('#chat_message_template').text();
+        var el = $(text);
+        return el;
+    }
+
+    function createMessageRightEl() {
+        var text = $('#chat_message_template_right').text();
         var el = $(text);
         return el;
     }

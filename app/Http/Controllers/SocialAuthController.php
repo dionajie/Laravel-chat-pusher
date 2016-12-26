@@ -19,14 +19,9 @@ class SocialAuthController extends Controller
 	
     public function callback(SocialAccountService $service, $provider)
 	{
-	    // Important change from previous post is that I'm now passing
-	    // whole driver, not only the user. So no more ->user() part
 	    $user = $service->createOrGetUser(Socialite::driver($provider));
+	    auth()->login($user); 
 
-	    auth()->login($user);
-
-	  
-
-	    return redirect()->to('/');
+	    return redirect()->to('/chat');
 	}
 }

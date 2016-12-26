@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+                    {{-- <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -60,7 +60,7 @@
 
                         
                     </form>
-                    <p class="text-center"> OR </p>
+                    <p class="text-center"> OR </p> --}}
                     <div class="col-md-12">
                         <div class="col-md-6 col-md-offset-3 text-center">
                             <a href="redirect/twitter" class="btn btn-success btn-lg"> <i class="fa fa-twitter" aria-hidden="true"></i> Twitter Login</a>

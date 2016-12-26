@@ -10,7 +10,6 @@ use Auth;
 use App\History;
 use DB;
 use Carbon\Carbon;
-// use Response;
 
 class ChatController extends Controller
 {
@@ -34,7 +33,7 @@ class ChatController extends Controller
         {
             return redirect('home');
         }
-        // dd(time());
+
         $chatChannel = $this->chatChannel;
 
         return view('chat.chat', compact('chatChannel'));
@@ -45,8 +44,9 @@ class ChatController extends Controller
 
         $message = [
             'text' => e($request->input('chat_text')),
-            'username' => $this->user['name'],
+            'name' => $this->user['name'],
             'avatar' => $this->user['avatar'],
+            'username' => $this->user['username'],
             'timestamp' => Carbon::now()
         ];
 
@@ -62,6 +62,7 @@ class ChatController extends Controller
         $response = History::where('id_history','>', $id)
                             ->orderBy('timestamp')
                             ->get();
+                            
         return \Response::json($response);    
     }
 }
