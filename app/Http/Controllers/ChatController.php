@@ -10,6 +10,7 @@ use Auth;
 use App\History;
 use DB;
 use Carbon\Carbon;
+use App\User;
 
 class ChatController extends Controller
 {
@@ -34,9 +35,10 @@ class ChatController extends Controller
             return redirect('home');
         }
 
+        $users = User::all();
         $chatChannel = $this->chatChannel;
 
-        return view('chat.chat', compact('chatChannel'));
+        return view('chat.chat', compact('chatChannel','users'));
     }
 
     public function postAuth(Request $request)
