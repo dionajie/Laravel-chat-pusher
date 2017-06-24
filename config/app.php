@@ -157,6 +157,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Vinkla\Pusher\PusherServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Way\Generators\GeneratorsServiceProvider::class,
+        Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
 
 
     ],

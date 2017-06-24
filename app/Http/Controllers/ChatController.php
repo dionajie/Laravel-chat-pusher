@@ -52,8 +52,6 @@ class ChatController extends Controller
             $auth = $this->pusher->presence_auth($channelName, $socketId, $user_id,$presence_data);
 
             return response($auth);
-        
-
     }
 
     public function postMessage(Request $request)
